@@ -270,29 +270,29 @@ static void render_sym(void) {
 }
 
 static void render_sym_layer_guide(void) {
+    oled_set_cursor(0, 9);
+    oled_write_P(PSTR("    {  &  * (   }  "), false);
     oled_set_cursor(0, 10);
-    oled_write_P(PSTR("  {  &  * (  }  "), false);
+    oled_write_P(PSTR("    :  $  %  ^  +  "), false);
     oled_set_cursor(0, 11);
-    oled_write_P(PSTR("  :  $  %  ^  +  "), false);
-    oled_set_cursor(0, 12);
-    oled_write_P(PSTR("  ~  !  @  #  |  "), false);
+    oled_write_P(PSTR("    ~  !  @  #  |  "), false);
 }
 
 static void render_num_layer_guide(void) {
+    oled_set_cursor(0, 9);
+    oled_write_P(PSTR("    [  7  8  9  ]  "), false);
     oled_set_cursor(0, 10);
-    oled_write_P(PSTR("  [  7  8  9  ]  "), false);
+    oled_write_P(PSTR("    ;  4  5  6  =  "), false);
     oled_set_cursor(0, 11);
-    oled_write_P(PSTR("  ;  4  5  6  =  "), false);
-    oled_set_cursor(0, 12);
-    oled_write_P(PSTR("  .  1  2  3  \\  "), false);
+    oled_write_P(PSTR("    .  1  2  3  \\  "), false);
 }
 
 static void render_clear_guides(void) {
+    oled_set_cursor(0, 9);
+    oled_write_P(PSTR("                    "), false);
     oled_set_cursor(0, 10);
     oled_write_P(PSTR("                    "), false);
     oled_set_cursor(0, 11);
-    oled_write_P(PSTR("                    "), false);
-    oled_set_cursor(0, 12);
     oled_write_P(PSTR("                    "), false);
 }
 
@@ -307,8 +307,21 @@ static void render_status_bar(void) {
     oled_write_P((mods & MOD_MASK_ALT) ? PSTR("ALT ") : PSTR("--- "), false);
     oled_write_P((mods & MOD_MASK_GUI) ? PSTR("GUI ") : PSTR("--- "), false);
 
-    oled_set_cursor(0, 13);
+    oled_set_cursor(0, 12);
     oled_write_P(PSTR("--------------------"), false);
+}
+
+static void render_mouse_status(void) {
+    uint16_t current_cpi = pointing_device_get_cpi();
+
+    bool is_sniping = dilemma_get_pointer_sniping_enabled();
+
+    char mouse_str[21];
+
+    snprintf(mouse_str, sizeof(mouse_str), "DPI: %d %s", current_cpi, is_sniping ? "[SNIP]" : "      ");
+
+    oled_set_cursor(0, 13);
+    oled_write(mouse_str, false);
 }
 
 bool oled_task_user(void) {
@@ -342,11 +355,11 @@ bool oled_task_user(void) {
             render_clear_guides();
     }
 
+    render_mouse_status();
     render_status_bar();
 
     oled_set_cursor(0, 15);
     led_t led_state = host_keyboard_led_state();
-    if (led_state.num_lock) oled_write_P(PSTR("NUM "), false);
     if (led_state.caps_lock) oled_write_P(PSTR("CAPS "), false);
     if (led_state.scroll_lock) oled_write_P(PSTR("SCR "), false);
 
