@@ -287,6 +287,15 @@ static void render_num_layer_guide(void) {
     oled_write_P(PSTR("  .  1  2  3  \\  "), false);
 }
 
+static void render_clear_guides(void) {
+    oled_set_cursor(0, 10);
+    oled_write_P(PSTR("                    "), false);
+    oled_set_cursor(0, 11);
+    oled_write_P(PSTR("                    "), false);
+    oled_set_cursor(0, 12);
+    oled_write_P(PSTR("                    "), false);
+}
+
 static void render_status_bar(void) {
     uint8_t mods = get_mods() | get_oneshot_mods();
 
@@ -306,6 +315,7 @@ bool oled_task_user(void) {
     switch (get_highest_layer(layer_state)) {
         case LAYER_BASE:
             render_base();
+            render_clear_guides();
             break;
         case LAYER_FUNCTION:
             render_function();
@@ -329,6 +339,7 @@ bool oled_task_user(void) {
             break;
         default:
             render_base();
+            render_clear_guides();
     }
 
     render_status_bar();
