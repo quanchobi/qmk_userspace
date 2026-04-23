@@ -270,20 +270,20 @@ static void render_sym(void) {
 }
 
 static void render_sym_layer_guide(void) {
-    oled_set_cursor(0, 5);
+    oled_set_cursor(0, 10);
     oled_write_P(PSTR("  {  &  * (  }  "), false);
-    oled_set_cursor(0, 6);
+    oled_set_cursor(0, 11);
     oled_write_P(PSTR("  :  $  %  ^  +  "), false);
-    oled_set_cursor(0, 7);
+    oled_set_cursor(0, 12);
     oled_write_P(PSTR("  ~  !  @  #  |  "), false);
 }
 
 static void render_num_layer_guide(void) {
-    oled_set_cursor(0, 5);
+    oled_set_cursor(0, 10);
     oled_write_P(PSTR("  [  7  8  9  ]  "), false);
-    oled_set_cursor(0, 6);
+    oled_set_cursor(0, 11);
     oled_write_P(PSTR("  ;  4  5  6  =  "), false);
-    oled_set_cursor(0, 7);
+    oled_set_cursor(0, 12);
     oled_write_P(PSTR("  .  1  2  3  \\  "), false);
 }
 
