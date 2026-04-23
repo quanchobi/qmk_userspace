@@ -38,7 +38,7 @@ enum dilemma_keymap_layers {
 #define BSP_NUM LT(LAYER_NUMERAL, KC_BSPC)
 #define PT_Z LT(LAYER_POINTER, KC_Z)
 #define PT_SLSH LT(LAYER_POINTER, KC_SLSH)
-#define DEL_MAC LT(LAYER_MACROS, KC_MUTE)
+#define DEL_MAC LT(LAYER_MACROS, KC_DEL)
 
 #ifndef POINTING_DEVICE_ENABLE
 #    define DRGSCRL KC_NO
