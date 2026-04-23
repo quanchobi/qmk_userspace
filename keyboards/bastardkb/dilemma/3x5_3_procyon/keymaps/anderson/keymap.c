@@ -270,29 +270,29 @@ static void render_sym(void) {
 }
 
 static void render_sym_layer_guide(void) {
-    oled_set_cursor(0, 9);
+    oled_set_cursor(0, 8);
     oled_write_P(PSTR("    {  &  * (   }  "), false);
-    oled_set_cursor(0, 10);
+    oled_set_cursor(0, 9);
     oled_write_P(PSTR("    :  $  %  ^  +  "), false);
-    oled_set_cursor(0, 11);
+    oled_set_cursor(0, 10);
     oled_write_P(PSTR("    ~  !  @  #  |  "), false);
 }
 
 static void render_num_layer_guide(void) {
-    oled_set_cursor(0, 9);
+    oled_set_cursor(0, 8);
     oled_write_P(PSTR("    [  7  8  9  ]  "), false);
-    oled_set_cursor(0, 10);
+    oled_set_cursor(0, 9);
     oled_write_P(PSTR("    ;  4  5  6  =  "), false);
-    oled_set_cursor(0, 11);
+    oled_set_cursor(0, 10);
     oled_write_P(PSTR("    .  1  2  3  \\  "), false);
 }
 
 static void render_clear_guides(void) {
+    oled_set_cursor(0, 8);
+    oled_write_P(PSTR("                    "), false);
     oled_set_cursor(0, 9);
     oled_write_P(PSTR("                    "), false);
     oled_set_cursor(0, 10);
-    oled_write_P(PSTR("                    "), false);
-    oled_set_cursor(0, 11);
     oled_write_P(PSTR("                    "), false);
 }
 
@@ -360,6 +360,7 @@ bool oled_task_user(void) {
 
     oled_set_cursor(0, 15);
     led_t led_state = host_keyboard_led_state();
+    if (led_state.num_lock) oled_write_P(PSTR("NUM "), false);
     if (led_state.caps_lock) oled_write_P(PSTR("CAPS "), false);
     if (led_state.scroll_lock) oled_write_P(PSTR("SCR "), false);
 
