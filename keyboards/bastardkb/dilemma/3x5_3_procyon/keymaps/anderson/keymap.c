@@ -270,21 +270,18 @@ static void render_sym(void) {
 }
 
 static void render_status_bar(void) {
-    // Get current active mods and any pending one-shot mods
     uint8_t mods = get_mods() | get_oneshot_mods();
 
-    // Move cursor to the bottom area (Row 14 of 16 on a 128x128)
     oled_set_cursor(0, 14);
 
     oled_write_P(PSTR("MODS: "), false);
-    oled_write_P((mods & MOD_MASK_SHIFT) ? PSTR("SHFT ") : PSTR("---- "), false);
-    oled_write_P((mods & MOD_MASK_CTRL) ? PSTR("CTRL ") : PSTR("---- "), false);
-    oled_write_P((mods & MOD_MASK_ALT) ? PSTR("ALT  ") : PSTR("---- "), false);
-    oled_write_P((mods & MOD_MASK_GUI) ? PSTR("GUI  ") : PSTR("---- "), false);
+    oled_write_P((mods & MOD_MASK_SHIFT) ? PSTR("SFT ") : PSTR("--- "), false);
+    oled_write_P((mods & MOD_MASK_CTRL) ? PSTR("CTL ") : PSTR("--- "), false);
+    oled_write_P((mods & MOD_MASK_ALT) ? PSTR("ALT ") : PSTR("--- "), false);
+    oled_write_P((mods & MOD_MASK_GUI) ? PSTR("GUI ") : PSTR("--- "), false);
 
-    // Add a separator line above the WPM if you like
     oled_set_cursor(0, 13);
-    oled_write_P(PSTR("____________________"), false);
+    oled_write_P(PSTR("--------------------"), false);
 }
 
 bool oled_task_user(void) {
