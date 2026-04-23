@@ -344,15 +344,6 @@ static void render_pointer_layer_guide(void) {
     oled_write_P(PSTR(" BT1 BT2 BT3             "), false);
 }
 
-static void render_macro_layer_guide(void) {
-    oled_set_cursor(0, 7);
-    oled_write_P(PSTR(" M0  M1  M2  M3  M4  "), false);
-    oled_set_cursor(0, 8);
-    oled_write_P(PSTR(" M5  M6  M7  M8  M9  "), false);
-    oled_set_cursor(0, 9);
-    oled_write_P(PSTR(" M10 M11 M12 M13 M14 "), false);
-}
-
 static void render_status_bar(void) {
     uint8_t mods = get_mods() | get_oneshot_mods();
 
@@ -411,8 +402,6 @@ bool oled_task_user(void) {
             render_sym();
             render_sym_layer_guide();
             break;
-        case LAYER_MACROS:
-            render_macro_layer_guide();
         default:
             render_base();
             render_clear_guides();
