@@ -93,7 +93,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_NAVIGATION] = LAYOUT_split_3x5_3(
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PSCR, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
     KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_CAPS,
-    XXXXXXX, KC_RALT, XXXXXXX, XXXXXXX, XXXXXXX,  KC_INS, KC_HOME, KC_PGDN, KC_PGUP,  KC_END,
+    XXXXXXX, KC_RALT, XXXXXXX, XXXXXXX, XXXXXXX,  KC_HOME, KC_PGDN, KC_PGUP, KC_PGEND,  KC_INS,
                       XXXXXXX, XXXXXXX, _______,  KC_ENT, KC_BSPC, KC_DEL
   ),
 
@@ -104,7 +104,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * symmetrical to accomodate the left- and right-hand trackball.
  */
   [LAYER_MEDIA] = LAYOUT_split_3x5_3(
-    XXXXXXX, RM_PREV, RM_TOGG, RM_NEXT, XXXXXXX, XXXXXXX, RM_PREV, RM_TOGG, RM_NEXT, XXXXXXX,
+    XXXXXXX, RM_PREV, RM_TOGG, RM_NEXT, XXXXXXX, RM_PREV, XXXXXXX, RM_TOGG, RM_NEXT, XXXXXXX,
     KC_MPRV, KC_VOLD, KC_MUTE, KC_VOLU, KC_MNXT, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT, XXXXXXX,
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                       _______, KC_MPLY, KC_MSTP, KC_MSTP, KC_MPLY, KC_MUTE
@@ -269,6 +269,24 @@ static void render_sym(void) {
     oled_write_raw_P(sym, sizeof(sym));
 }
 
+static void render_sym_layer_guide(void) {
+    oled_set_cursor(0, 5);
+    oled_write_P(PSTR("  {  &  * (  }  "), false);
+    oled_set_cursor(0, 6);
+    oled_write_P(PSTR("  :  $  %  ^  +  "), false);
+    oled_set_cursor(0, 7);
+    oled_write_P(PSTR("  ~  !  @  #  |  "), false);
+}
+
+static void render_num_layer_guide(void) {
+    oled_set_cursor(0, 5);
+    oled_write_P(PSTR("  [  7  8  9  ]  "), false);
+    oled_set_cursor(0, 6);
+    oled_write_P(PSTR("  ;  4  5  6  =  "), false);
+    oled_set_cursor(0, 7);
+    oled_write_P(PSTR("  .  1  2  3  \  "), false);
+}
+
 static void render_status_bar(void) {
     uint8_t mods = get_mods() | get_oneshot_mods();
 
@@ -303,9 +321,11 @@ bool oled_task_user(void) {
             break;
         case LAYER_NUMERAL:
             render_num();
+            render_num_layer_guide();
             break;
         case LAYER_SYMBOLS:
             render_sym();
+            render_sym_layer_guide();
             break;
         default:
             render_base();
