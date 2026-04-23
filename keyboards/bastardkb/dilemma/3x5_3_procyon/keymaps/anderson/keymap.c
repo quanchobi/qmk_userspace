@@ -304,53 +304,53 @@ static void render_clear_guides(void) {
 
 static void render_function_layer_guide(void) {
     oled_set_cursor(0, 7);
-    oled_write_P(PSTR("    PSC F7  F8  F9 F12"), false);
+    oled_write_P(PSTR("  PSC F7  F8  F9 F12"), false);
     oled_set_cursor(0, 8);
-    oled_write_P(PSTR("    SCR F4  F5  F6 F11"), false);
+    oled_write_P(PSTR("  SCR F4  F5  F6 F11"), false);
     oled_set_cursor(0, 9);
-    oled_write_P(PSTR("    PAU F1  F2  F3 F10"), false);
+    oled_write_P(PSTR("  PAU F1  F2  F3 F10"), false);
 }
 
 static void render_navigation_layer_guide(void) {
     oled_set_cursor(0, 7);
-    oled_write_P(PSTR("    PSC HOM PGD PGU END"), false);
+    oled_write_P(PSTR("  PSC HOM PGD PGU END"), false);
     oled_set_cursor(0, 8);
-    oled_write_P(PSTR("    LFT DWN  UP RIG CPS"), false);
+    oled_write_P(PSTR("  LFT DWN  UP RIG CPS"), false);
     oled_set_cursor(0, 9);
-    oled_write_P(PSTR("    INS HOM PGD PGU END"), false);
+    oled_write_P(PSTR("  INS HOM PGD PGU END"), false);
     oled_set_cursor(0, 10);
-    oled_write_P(PSTR("    ENT BSP DEL        "), false);
+    oled_write_P(PSTR("  ENT BSP DEL        "), false);
 }
 
 static void render_media_layer_guide(void) {
     oled_set_cursor(0, 7);
-    oled_write_P(PSTR("    PRE --- TOG NXT ---"), false);
+    oled_write_P(PSTR("  PRE --- TOG NXT ---"), false);
     oled_set_cursor(0, 8);
-    oled_write_P(PSTR("    PRV VLD VLU NXT ---"), false);
+    oled_write_P(PSTR("  PRV VLD VLU NXT ---"), false);
     oled_set_cursor(0, 9);
-    oled_write_P(PSTR("    --- --- --- --- ---"), false);
+    oled_write_P(PSTR("  --- --- --- --- ---"), false);
     oled_set_cursor(0, 10);
-    oled_write_P(PSTR("    STP PLY MUT        "), false);
+    oled_write_P(PSTR("  STP PLY MUT        "), false);
 }
 
 static void render_pointer_layer_guide(void) {
     oled_set_cursor(0, 7);
-    oled_write_P(PSTR("    --- --- DPI --- CLR QBT"), false);
+    oled_write_P(PSTR("  --- --- DPI --- CLR QBT"), false);
     oled_set_cursor(0, 8);
-    oled_write_P(PSTR("    --- LFT DWN UP  RGT ---"), false);
+    oled_write_P(PSTR("  --- LFT DWN UP  RGT ---"), false);
     oled_set_cursor(0, 9);
-    oled_write_P(PSTR("    --- --- BT3 SNP DRG ---"), false);
+    oled_write_P(PSTR("  --- --- BT3 SNP DRG ---"), false);
     oled_set_cursor(0, 10);
-    oled_write_P(PSTR("    BT1 BT2 BT3            "), false);
+    oled_write_P(PSTR("  BT1 BT2 BT3            "), false);
 }
 
 static void render_macro_layer_guide(void) {
     oled_set_cursor(0, 7);
-    oled_write_P(PSTR("    M0  M1  M2  M3  M4 "), false);
+    oled_write_P(PSTR("  M0  M1  M2  M3  M4 "), false);
     oled_set_cursor(0, 8);
-    oled_write_P(PSTR("    M5  M6  M7  M8  M9 "), false);
+    oled_write_P(PSTR("  M5  M6  M7  M8  M9 "), false);
     oled_set_cursor(0, 9);
-    oled_write_P(PSTR("    M10 M11 M12 M13 M14"), false);
+    oled_write_P(PSTR("  M10 M11 M12 M13 M14"), false);
 }
 
 static void render_status_bar(void) {
