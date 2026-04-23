@@ -269,6 +269,24 @@ static void render_sym(void) {
     oled_write_raw_P(sym, sizeof(sym));
 }
 
+static void render_status_bar(void) {
+    // Get current active mods and any pending one-shot mods
+    uint8_t mods = get_mods() | get_oneshot_mods();
+
+    // Move cursor to the bottom area (Row 14 of 16 on a 128x128)
+    oled_set_cursor(0, 14);
+
+    oled_write_P(PSTR("MODS: "), false);
+    oled_write_P((mods & MOD_MASK_SHIFT) ? PSTR("SHFT ") : PSTR("---- "), false);
+    oled_write_P((mods & MOD_MASK_CTRL) ? PSTR("CTRL ") : PSTR("---- "), false);
+    oled_write_P((mods & MOD_MASK_ALT) ? PSTR("ALT  ") : PSTR("---- "), false);
+    oled_write_P((mods & MOD_MASK_GUI) ? PSTR("GUI  ") : PSTR("---- "), false);
+
+    // Add a separator line above the WPM if you like
+    oled_set_cursor(0, 13);
+    oled_write_P(PSTR("____________________"), false);
+}
+
 bool oled_task_user(void) {
     switch (get_highest_layer(layer_state)) {
         case LAYER_BASE:
@@ -296,18 +314,22 @@ bool oled_task_user(void) {
             render_base();
     }
 
+    render_status_bar();
+
+    oled_set_cursor(0, 15);
     led_t led_state = host_keyboard_led_state();
     if (led_state.num_lock) oled_write_P(PSTR("NUM "), false);
     if (led_state.caps_lock) oled_write_P(PSTR("CAPS "), false);
     if (led_state.scroll_lock) oled_write_P(PSTR("SCR "), false);
 
 #    ifdef WPM_ENABLE
-    oled_set_cursor(0, 12);
+    oled_set_cursor(14, 15);
     uint8_t wpm = get_current_wpm();
     char    wpm_str[10];
-    snprintf(wpm_str, sizeof(wpm_str), "WPM %d", wpm);
+    snprintf(wpm_str, sizeof(wpm_str), "WPM %03d", wpm);
     oled_write(wpm_str, false);
 #    endif
+
     return false;
 }
 #endif
