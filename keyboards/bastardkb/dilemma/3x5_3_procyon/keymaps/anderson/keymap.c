@@ -112,7 +112,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /** \brief Mouse emulation and pointer functions. */
   [LAYER_POINTER] = LAYOUT_split_3x5_3(
-    QK_BOOT,  EE_CLR, XXXXXXX, DPI_MOD, S_D_MOD, S_D_MOD, DPI_MOD, XXXXXXX,  EE_CLR, QK_BOOT,
+    QK_BOOT,  EE_CLR, XXXXXXX, DPI_MOD, S_D_MOD, S_D_MOD, MS_WHLD, MS_WHLU,  EE_CLR, QK_BOOT,
     KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX, MS_LEFT, MS_DOWN,   MS_UP, MS_RGHT,  XXXXXXX,
     _______, DRGSCRL, SNIPING, MS_BTN3, XXXXXXX, XXXXXXX, MS_BTN3, SNIPING, DRGSCRL, _______,
                       MS_BTN3, MS_BTN2, MS_BTN1, MS_BTN1, MS_BTN2, MS_BTN3
@@ -335,7 +335,7 @@ static void render_media_layer_guide(void) {
 
 static void render_pointer_layer_guide(void) {
     oled_set_cursor(0, 7);
-    oled_write_P(PSTR(" --- --- DPI --- CLR QBT "), false);
+    oled_write_P(PSTR(" --- --- WHD WHU CLR QBT "), false);
     oled_set_cursor(0, 8);
     oled_write_P(PSTR(" --- LFT DWN UP  RGT --- "), false);
     oled_set_cursor(0, 9);
