@@ -16,6 +16,7 @@
  */
 
 #include QMK_KEYBOARD_H
+#include "bk_pointing_modes.h"
 
 enum dilemma_keymap_layers {
     LAYER_BASE = 0,
@@ -27,9 +28,6 @@ enum dilemma_keymap_layers {
     LAYER_SYMBOLS,
     LAYER_MACROS,
 };
-
-// Automatically enable sniping-mode on the pointer layer.
-// #define DILEMMA_AUTO_SNIPING_ON_LAYER LAYER_POINTER
 
 #define ESC_MED LT(LAYER_MEDIA, KC_ESC)
 #define SPC_NAV LT(LAYER_NAVIGATION, KC_SPC)
@@ -159,15 +157,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 };
 // clang-format on
-
-#ifdef POINTING_DEVICE_ENABLE
-#    ifdef DILEMMA_AUTO_SNIPING_ON_LAYER
-layer_state_t layer_state_set_user(layer_state_t state) {
-    dilemma_set_pointer_sniping_enabled(layer_state_cmp(state, DILEMMA_AUTO_SNIPING_ON_LAYER));
-    return state;
-}
-#    endif // DILEMMA_AUTO_SNIPING_ON_LAYER
-#endif     // POINTING_DEVICE_ENABLE
 
 #ifdef ENCODER_MAP_ENABLE
 // clang-format off
@@ -335,13 +324,13 @@ static void render_media_layer_guide(void) {
 
 static void render_pointer_layer_guide(void) {
     oled_set_cursor(0, 7);
-    oled_write_P(PSTR(" --- --- WHD WHU CLR QBT "), false);
+    oled_write_P(PSTR(" SDP WHD WHU CLR QBT "), false);
     oled_set_cursor(0, 8);
-    oled_write_P(PSTR(" --- LFT DWN UP  RGT --- "), false);
+    oled_write_P(PSTR(" LFT DWN UP  RGT --- "), false);
     oled_set_cursor(0, 9);
-    oled_write_P(PSTR(" --- --- BT3 SNP DRG --- "), false);
+    oled_write_P(PSTR(" --- BT3 SNP DRG --- "), false);
     oled_set_cursor(0, 10);
-    oled_write_P(PSTR(" BT1 BT2 BT3             "), false);
+    oled_write_P(PSTR(" BT1 BT2 BT3         "), false);
 }
 
 static void render_status_bar(void) {
@@ -362,7 +351,7 @@ static void render_status_bar(void) {
 static void render_mouse_status(void) {
     uint16_t current_cpi = pointing_device_get_cpi();
 
-    bool is_sniping = dilemma_get_pointer_sniping_enabled();
+    bool is_sniping = bkpd_mode_is_sniping();
 
     char mouse_str[21];
 
