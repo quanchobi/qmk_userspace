@@ -110,9 +110,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /** \brief Mouse emulation and pointer functions. */
   [LAYER_POINTER] = LAYOUT_split_3x5_3(
-    QK_BOOT,  EE_CLR, XXXXXXX, DPI_MOD, S_D_MOD, S_D_MOD, MS_WHLD, MS_WHLU,  EE_CLR, QK_BOOT,
-    KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX, MS_LEFT, MS_DOWN,   MS_UP, MS_RGHT,  XXXXXXX,
-    _______, DRGSCRL, SNIPING, MS_BTN3, XXXXXXX, XXXXXXX, MS_BTN3, SNIPING, DRGSCRL, _______,
+    QK_BOOT,  EE_CLR,   PTABS, DPI_MOD, S_D_MOD, S_D_MOD, MS_WHLD, MS_WHLU,  EE_CLR, QK_BOOT,
+    KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT,   PHIST, MS_LEFT, MS_DOWN,   MS_UP, MS_RGHT, PZOOM_TOG,
+    _______, DRGSCRL, SNIPING, MS_BTN3, PBRIGHT, CUR_TOG, MS_BTN3, SNIPING, DRGSCRL, _______,
                       MS_BTN3, MS_BTN2, MS_BTN1, MS_BTN1, MS_BTN2, MS_BTN3
   ),
 
@@ -157,20 +157,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 };
 // clang-format on
-
-#ifdef ENCODER_MAP_ENABLE
-// clang-format off
-const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
-    [LAYER_BASE]       = {ENCODER_CCW_CW(MS_WHLD, MS_WHLU),  ENCODER_CCW_CW(KC_VOLD, KC_VOLU)},
-    [LAYER_FUNCTION]   = {ENCODER_CCW_CW(KC_DOWN, KC_UP),    ENCODER_CCW_CW(KC_LEFT, KC_RGHT)},
-    [LAYER_NAVIGATION] = {ENCODER_CCW_CW(KC_PGDN, KC_PGUP),  ENCODER_CCW_CW(KC_VOLU, KC_VOLD)},
-    [LAYER_MEDIA]      = {ENCODER_CCW_CW(KC_PGDN, KC_PGUP),  ENCODER_CCW_CW(KC_VOLU, KC_VOLD)},
-    [LAYER_POINTER]    = {ENCODER_CCW_CW(RM_HUED, RM_HUEU),  ENCODER_CCW_CW(RM_SATD, RM_SATU)},
-    [LAYER_NUMERAL]    = {ENCODER_CCW_CW(RM_VALD, RM_VALU),  ENCODER_CCW_CW(RM_SPDD, RM_SPDU)},
-    [LAYER_SYMBOLS]    = {ENCODER_CCW_CW(RM_PREV, RM_NEXT),  ENCODER_CCW_CW(KC_LEFT, KC_RGHT)},
-};
-// clang-format on
-#endif // ENCODER_MAP_ENABLE
 
 #ifdef OLED_ENABLE
 static void render_base(void) {
@@ -302,11 +288,11 @@ static void render_function_layer_guide(void) {
 
 static void render_navigation_layer_guide(void) {
     oled_set_cursor(0, 7);
-    oled_write_P(PSTR(" PSC HOM PGD PGU END "), false);
+    oled_write_P(PSTR(" PSC --- --- --- --- "), false);
     oled_set_cursor(0, 8);
     oled_write_P(PSTR(" LFT DWN  UP RIG CPS "), false);
     oled_set_cursor(0, 9);
-    oled_write_P(PSTR(" INS HOM PGD PGU END "), false);
+    oled_write_P(PSTR(" HOM PGD PGU END INS "), false);
     oled_set_cursor(0, 10);
     oled_write_P(PSTR(" ENT BSP DEL         "), false);
 }
@@ -326,9 +312,9 @@ static void render_pointer_layer_guide(void) {
     oled_set_cursor(0, 7);
     oled_write_P(PSTR(" SDP WHD WHU CLR QBT "), false);
     oled_set_cursor(0, 8);
-    oled_write_P(PSTR(" LFT DWN UP  RGT --- "), false);
+    oled_write_P(PSTR(" LFT DWN UP  RGT ZOM "), false);
     oled_set_cursor(0, 9);
-    oled_write_P(PSTR(" --- BT3 SNP DRG --- "), false);
+    oled_write_P(PSTR(" CUR BT3 SNP DRG --- "), false);
     oled_set_cursor(0, 10);
     oled_write_P(PSTR(" BT1 BT2 BT3         "), false);
 }
@@ -348,14 +334,29 @@ static void render_status_bar(void) {
     oled_write_P(PSTR("---------------------"), false);
 }
 
+static const char *const mode_labels[MODE_LAST] = {
+    [MODE_NORMAL] = "",         [MODE_SNIPING] = "SNIP",   [MODE_DRAGSCROLL] = "DRAG", [MODE_CURSOR] = "CURS",   [MODE_BRIGHTNESS] = "BRIT",
+    [MODE_ZOOM] = "ZOOM",       [MODE_VOLUME] = "VOL",     [MODE_TAB_SWITCH] = "TABS", [MODE_HISTORY] = "HIST",  [MODE_CUSTOM1] = "CUS1",
+    [MODE_CUSTOM2] = "CUS2",    [MODE_CUSTOM3] = "CUS3",   [MODE_CUSTOM4] = "CUS4",    [MODE_CUSTOM5] = "CUS5",
+};
+
 static void render_mouse_status(void) {
     uint16_t current_cpi = pointing_device_get_cpi();
 
-    bool is_sniping = bkpd_mode_is_sniping();
+    // Active pointing mode; sniping can also stack on top of another mode.
+    uint8_t     mode  = bkpd_mode_get_active_id();
+    const char *label = mode < MODE_LAST ? mode_labels[mode] : "";
+    char        mode_str[10];
+
+    if (mode != MODE_SNIPING && bkpd_mode_is_sniping()) {
+        snprintf(mode_str, sizeof(mode_str), "%s+SNIP", label);
+    } else {
+        snprintf(mode_str, sizeof(mode_str), "%s", label);
+    }
 
     char mouse_str[21];
 
-    snprintf(mouse_str, sizeof(mouse_str), "DPI: %d %s", current_cpi, is_sniping ? "[SNIP]" : "      ");
+    snprintf(mouse_str, sizeof(mouse_str), "DPI: %-5u %-9s", (unsigned)current_cpi, mode_str);
 
     oled_set_cursor(0, 13);
     oled_write(mouse_str, false);
